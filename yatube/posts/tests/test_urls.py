@@ -42,7 +42,7 @@ class StaticURLTests(TestCase):
     def test_homepage(self):
         # Отправляем запрос через client,
         # созданный в setUp()
-        response = self.unauthorized_user.get('/')  
+        response = self.unauthorized_user.get('/')
         self.assertEqual(response.status_code, 200)
 
     def test_unauthorized_user_urls_status_code(self):
