@@ -40,7 +40,7 @@ class PostURLTests(TestCase):
         self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(self.author)
-    
+
     def test_guest_urls(self):
         # Проверяем общедоступные страницы
         urls_names = {
