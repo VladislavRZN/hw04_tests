@@ -27,7 +27,6 @@ class PostsPagesTests(TestCase):
             text=settings.POST_TEXT,
             group=cls.group
         )
-        cls.authorized_client = Client()
         cls.authorized_client.force_login(cls.author)
         cls.POST_EDIT = reverse('posts:post_edit',
                                 kwargs={'post_id': cls.post.pk})
