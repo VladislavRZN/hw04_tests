@@ -25,10 +25,10 @@ class PostModelTest(TestCase):
         # Проверяем, что у моделей корректно работает __str__
         self.assertEqual(PostModelTest.group.title,
                          str(PostModelTest.group)
-                        )
+                         )
         self.assertEqual(PostModelTest.post.text,
                          str(PostModelTest.post)
-                        )
+                         )
 
     def test_verbose_name(self):
         # verbose_name в полях совпадает с ожидаемым.

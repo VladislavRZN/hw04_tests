@@ -71,9 +71,9 @@ class PostsPagesTests(TestCase):
     def test_group_list_show_correct_context(self):
         """Проверка контекста posts:group_list"""
         response = self.client.get(GROUP)
-        self.assertEqual(list(response.context.get('page_obj')), 
+        self.assertEqual(list(response.context.get('page_obj')),
                          list(Post.objects.filter(group=self.group.pk))
-                        )
+                         )
 
     def test_profile_show_correct_context(self):
         """Проверка контекста posts:profile"""

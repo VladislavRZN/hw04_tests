@@ -67,7 +67,7 @@ class PostsPagesTests(TestCase):
         self.assertNotEqual(old_post.text, new_post.text)
 
     def test_unauth_user_cant_publish_post(self):
-        # Проверка на невозможность создания поста для неавторизованного пользователя. 
+        # Проверка на невозможность создания поста для не авторизованного гостя
         posts_count = Post.objects.count()
         form_data = {
             'text': 'Тестовый текст',
