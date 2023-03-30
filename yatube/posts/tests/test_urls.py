@@ -33,13 +33,8 @@ class PostURLTests(TestCase):
             text=settings.POST_TEXT,
             group=cls.group
         )
-
-    def setUp(self):
-        # Устанавливаем данные для тестирования
-        # Создаём экземпляр клиента. Он неавторизован.
-        self.guest_client = Client()
-        self.authorized_client = Client()
-        self.authorized_client.force_login(self.author)
+        cls.authorized_client = Client()
+        cls.authorized_client.force_login(cls.author)
 
     def test_guest_urls(self):
         # Проверяем общедоступные страницы
@@ -52,7 +47,7 @@ class PostURLTests(TestCase):
         }
         for address, status in urls_names.items():
             with self.subTest(status=status):
-                response = self.guest_client.get(address)
+                response = self.client.get(address)
                 self.assertEqual(response.status_code, status)
 
     def test_autorized_urls(self):
@@ -83,7 +78,7 @@ class PostURLTests(TestCase):
 
     def test_post_edit_no_author(self):
         # Проверка редактирования поста не автором
-        response = self.guest_client.get(
+        response = self.client.get(
             f"/posts/{self.post.pk}/edit/")
         self.assertRedirects(response, (
             f'/auth/login/?next=/posts/{self.post.pk}/edit/'))

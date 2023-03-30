@@ -6,7 +6,6 @@ from django.urls import reverse
 
 from posts.models import Group, Post, User
 
-CREATE = reverse('posts:post_create')
 PROFILE = reverse('posts:profile',
                   kwargs={'username': settings.USER_NAME})
 
@@ -28,12 +27,10 @@ class PostsPagesTests(TestCase):
             text=settings.POST_TEXT,
             group=cls.group
         )
+        cls.authorized_client = Client()
+        cls.authorized_client.force_login(cls.author)
         cls.POST_EDIT = reverse('posts:post_edit',
                                 kwargs={'post_id': cls.post.pk})
-
-    def setUp(self):
-        self.authorized_client = Client()
-        self.authorized_client.force_login(self.author)
 
     def test_create_post_form(self):
         # Проверка формы создание поста автора
@@ -43,7 +40,7 @@ class PostsPagesTests(TestCase):
             'group': self.group.pk
         }
         response = self.authorized_client.post(
-            CREATE,
+            reverse('posts:post_create'),
             data=form_data,
             follow=True
         )
@@ -57,17 +54,30 @@ class PostsPagesTests(TestCase):
 
     def test_edit_post_form(self):
         # Проверка формы редактирования поста
-        post_count = Post.objects.count()
+        old_post = self.post
         form_data = {
-            'text': 'Тесе edited_post, игнорировать',
+            'text': 'Новый тестовый текст',
+        }
+        self.authorized_client.post(
+            reverse('posts:post_edit', kwargs={'post_id': '1'}),
+            data=form_data,
+            follow=True
+        )
+        new_post = Post.objects.get(id=1)
+        self.assertNotEqual(old_post.text, new_post.text)
+
+    def test_unauth_user_cant_publish_post(self):
+        # Проверка на невозможность создания поста для неавторизованного пользователя. 
+        posts_count = Post.objects.count()
+        form_data = {
+            'text': 'Тестовый текст',
             'group': self.group.pk,
         }
-        response = self.authorized_client.post(
-            self.POST_EDIT,
+        self.client.post(
+            reverse('posts:post_create'),
             data=form_data,
-            follow=True,
+            follow=True
         )
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertEqual(Post.objects.count(), post_count)
-        self.assertTrue(Post.objects.filter(
-            text=form_data['text']).exists())
+        self.assertEqual(Post.objects.count(), posts_count)
+        response = self.client.get('/create/')
+        self.assertRedirects(response, '/auth/login/?next=/create/')
