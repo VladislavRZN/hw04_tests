@@ -44,7 +44,7 @@ class PostsPagesTests(TestCase):
         }
         response = self.authorized_client.post(
             reverse('posts:post_create'),
-            data=form_data, 
+            data=form_data,
             follow=True
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
