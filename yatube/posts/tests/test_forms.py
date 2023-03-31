@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 from django.conf import settings
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.urls import reverse
 
 from posts.models import Group, Post, User
@@ -27,6 +27,7 @@ class PostsPagesTests(TestCase):
             text=settings.POST_TEXT,
             group=cls.group
         )
+        cls.authorized_client = Client()
         cls.authorized_client.force_login(cls.author)
         cls.POST_EDIT = reverse('posts:post_edit',
                                 kwargs={'post_id': cls.post.pk})

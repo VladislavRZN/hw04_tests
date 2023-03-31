@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from django.contrib.auth import get_user_model
 from django.conf import settings
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.urls import reverse
 
 from ..models import Group, Post, User
@@ -33,6 +33,7 @@ class PostURLTests(TestCase):
             text=settings.POST_TEXT,
             group=cls.group
         )
+        cls.authorized_client = Client()
         cls.authorized_client.force_login(cls.author)
 
     def test_guest_urls(self):
