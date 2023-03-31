@@ -43,8 +43,10 @@ class PostsPagesTests(TestCase):
                                 kwargs={'post_id': cls.post.pk})
         cls.POST_DETAIL = reverse('posts:post_detail',
                                   kwargs={'post_id': cls.post.pk})
-        cls.authorized_client = Client()
-        cls.authorized_client.force_login(cls.author)
+
+    def setUp(self):
+        self.authorized_client = Client()
+        self.authorized_client.force_login(self.author)
 
     def test_pages_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""

@@ -7,6 +7,7 @@ from django.urls import reverse
 from posts.models import Group, Post, User
 
 PROFILE = reverse('posts:profile',
+
                   kwargs={'username': settings.USER_NAME})
 
 
@@ -27,10 +28,12 @@ class PostsPagesTests(TestCase):
             text=settings.POST_TEXT,
             group=cls.group
         )
-        cls.authorized_client = Client()
-        cls.authorized_client.force_login(cls.author)
         cls.POST_EDIT = reverse('posts:post_edit',
                                 kwargs={'post_id': cls.post.pk})
+
+    def setUp(self):
+        self.authorized_client = Client()
+        self.authorized_client.force_login(self.author)
 
     def test_create_post_form(self):
         # Проверка формы создание поста автора
@@ -41,7 +44,7 @@ class PostsPagesTests(TestCase):
         }
         response = self.authorized_client.post(
             reverse('posts:post_create'),
-            data=form_data,
+            data=form_data, 
             follow=True
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
